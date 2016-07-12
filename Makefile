@@ -84,6 +84,7 @@ CONFIG_PLATFORM_ARM_SUNxI = n
 CONFIG_PLATFORM_ARM_SUN6I = n
 CONFIG_PLATFORM_ACTIONS_ATM702X = n
 CONFIG_PLATFORM_ACTIONS_ATV5201 = n
+CONFIG_PLATFORM_ODROID_XU3 = y
 
 CONFIG_DRVEXT_MODULE = n
 
@@ -993,6 +994,16 @@ ifneq ($(USER_MODULE_NAME),)
 MODULE_NAME := $(USER_MODULE_NAME)
 endif
 
+
+ifeq ($(CONFIG_PLATFORM_ODROID_XU3), y)
+#EXTRA_CFLAGS += -DCONFIG_LITTLE_ENDIAN
+ARCH ?= arm
+CROSS_COMPILE ?= arm-eabi-
+KVER := 3.10
+KSRC ?= ../../../../../../kernel/samsung/exynos5422/
+CONFIG_RTL8812AU ?= m
+endif
+
 ifneq ($(KERNELRELEASE),)
 
 rtk_core :=	core/rtw_cmd.o \
@@ -1040,11 +1051,11 @@ ifeq ($(CONFIG_RTL8723B), y)
 $(MODULE_NAME)-$(CONFIG_MP_INCLUDED)+= core/rtw_bt_mp.o
 endif
 
-obj-$(CONFIG_RTL8812AU_8821AU) := $(MODULE_NAME).o
+obj-$(CONFIG_RTL8812AU) := $(MODULE_NAME).o
 
 else
 
-export CONFIG_RTL8812AU_8821AU = m
+export CONFIG_RTL8812AU = m
 
 all: modules
 
