@@ -1402,7 +1402,7 @@ void _IQK_Tx_8812A(
 			ODM_SetBBReg(pDM_Odm, 0x82c, BIT(31), 0x1); // [31] = 1 --> Page C1
 			
 			if (TX1IQKOK == FALSE)
-			    	break;				// TXK fail, Don't do RXK
+			    break;				// TXK fail, Don't do RXK
 			
 				if (VDF_enable == 1){
 				ODM_SetBBReg(pDM_Odm, 0xee8, BIT(31), 0x0);    // TX VDF Disable
