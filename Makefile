@@ -151,6 +151,7 @@ CONFIG_PLATFORM_NOVATEK_NT72668 = n
 CONFIG_PLATFORM_HISILICON = n
 CONFIG_PLATFORM_NV_TK1 = n
 CONFIG_PLATFORM_RTL8197D = n
+CONFIG_PLATFORM_ODROIDN1 = y
 ###############################################################
 
 CONFIG_DRVEXT_MODULE = n
@@ -243,7 +244,8 @@ _BTC_FILES += hal/btc/halbtc8192e1ant.o \
 				hal/btc/halbtc8821c2ant.o
 endif
 
-include $(TopDIR)/hal/phydm/phydm.mk
+#include $(TopDIR)/hal/phydm/phydm.mk
+include ../hardware/wifi/realtek/drivers/rtl8812au/hal/phydm/phydm.mk
 ########### HAL_RTL8188E #################################
 ifeq ($(CONFIG_RTL8188E), y)
 
@@ -1739,6 +1741,15 @@ export DIR_LINUX=$(shell pwd)/../SDK/rlxlinux-sdk321-v50/linux-2.6.30
 ARCH ?= rlx
 CROSS_COMPILE:= $(DIR_LINUX)/../toolchain/rsdk-1.5.5-5281-EB-2.6.30-0.9.30.3-110714/bin/rsdk-linux-
 KSRC := $(DIR_LINUX)
+endif
+
+ifeq ($(CONFIG_PLATFORM_ODROIDN1), y)
+#EXTRA_CFLAGS += -DCONFIG_LITTLE_ENDIAN
+ARCH ?= arm64
+CROSS_COMPILE ?= aarch64-linux-gnu-
+KVER := 4.4
+KSRC ?= ../../../../kernel/
+CONFIG_RTL8812AU ?= m
 endif
 
 ifeq ($(CONFIG_MULTIDRV), y)
