@@ -244,8 +244,11 @@ _BTC_FILES += hal/btc/halbtc8192e1ant.o \
 				hal/btc/halbtc8821c2ant.o
 endif
 
-#include $(TopDIR)/hal/phydm/phydm.mk
+ifeq (, $(findstring rtl8812au, $(TopDIR)))
 include ../hardware/wifi/realtek/drivers/rtl8812au/hal/phydm/phydm.mk
+else
+include $(TopDIR)/hal/phydm/phydm.mk
+endif
 ########### HAL_RTL8188E #################################
 ifeq ($(CONFIG_RTL8188E), y)
 
