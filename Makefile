@@ -120,6 +120,7 @@ CONFIG_PLATFORM_MOZART = n
 CONFIG_PLATFORM_RTK119X = n
 CONFIG_PLATFORM_NOVATEK_NT72668 = n
 CONFIG_PLATFORM_AML = y
+CONFIG_PLATFORM_ODROID_XU3 = y
 ########################## DEBUG ##############################
 CONFIG_DEBUG = n
 CONFIG_DEBUG_CFG80211 = n
@@ -1510,6 +1511,15 @@ EXTRA_CFLAGS += -DCONFIG_IOCTL_CFG80211 -DRTW_USE_CFG80211_STA_EVENT
 ARCH := arm
 CROSS_COMPILE := arm-linux-gnueabihf-
 KSRC := ../../../../../../common
+endif
+
+ifeq ($(CONFIG_PLATFORM_ODROID_XU3), y)
+#EXTRA_CFLAGS += -DCONFIG_LITTLE_ENDIAN
+ARCH ?= arm
+CROSS_COMPILE ?= arm-eabi-
+KVER := 3.10
+KSRC ?= ../../../../../../kernel/samsung/exynos5422/
+CONFIG_RTL8812AU_SDK ?= m
 endif
 
 ifneq ($(USER_MODULE_NAME),)
