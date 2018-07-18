@@ -1601,7 +1601,7 @@ exit:
 static void rtw_dev_remove(struct usb_interface *pusb_intf)
 {
 	struct dvobj_priv *dvobj = usb_get_intfdata(pusb_intf);
-	//struct pwrctrl_priv *pwrctl = dvobj_to_pwrctl(dvobj);
+	struct pwrctrl_priv *pwrctl = dvobj_to_pwrctl(dvobj);
 	_adapter *padapter = dvobj->if1;
 	//struct net_device *pnetdev = padapter->pnetdev;
 	//struct mlme_priv *pmlmepriv= &padapter->mlmepriv;
