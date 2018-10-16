@@ -1513,12 +1513,11 @@ CROSS_COMPILE := arm-linux-gnueabihf-
 KSRC := ../../../../../../common
 endif
 
-ifeq ($(CONFIG_ARCH_MESON64_ODROIDC2), y)
-#EXTRA_CFLAGS += -DCONFIG_LITTLE_ENDIAN
+ifeq ($(CONFIG_ARCH_MESON64_ODROID_COMMON), y)
 ARCH ?= arm64
-CROSS_COMPILE ?= aarch64-none-elf-
-KVER := 3.14
-KSRC ?= ../../../../../kernel/
+CROSS_COMPILE ?= aarch64-linux-gnu-
+KVER := 4.9
+KSRC ?= ../../../../../common/
 CONFIG_RTL8812AU_SDK ?= m
 endif
 
