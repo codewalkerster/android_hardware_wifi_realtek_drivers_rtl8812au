@@ -1,18 +1,19 @@
 EXTRA_CFLAGS += $(USER_EXTRA_CFLAGS)
 EXTRA_CFLAGS += -O1
 #EXTRA_CFLAGS += -O3
-#EXTRA_CFLAGS += -Wall
+EXTRA_CFLAGS += -Wall
 #EXTRA_CFLAGS += -Wextra
-#EXTRA_CFLAGS += -Werror
+EXTRA_CFLAGS += -Werror
 #EXTRA_CFLAGS += -pedantic
 #EXTRA_CFLAGS += -Wshadow -Wpointer-arith -Wcast-qual -Wstrict-prototypes -Wmissing-prototypes
+EXTRA_CFLAGS += -Wframe-larger-than=1536
 
 EXTRA_CFLAGS += -Wno-unused-variable
-EXTRA_CFLAGS += -Wno-unused-value
-EXTRA_CFLAGS += -Wno-unused-label
+#EXTRA_CFLAGS += -Wno-unused-value
+#EXTRA_CFLAGS += -Wno-unused-label
 EXTRA_CFLAGS += -Wno-unused-parameter
 EXTRA_CFLAGS += -Wno-unused-function
-EXTRA_CFLAGS += -Wno-unused
+#EXTRA_CFLAGS += -Wno-unused
 
 #EXTRA_CFLAGS += -Wno-uninitialized
 
@@ -71,7 +72,7 @@ CONFIG_AP_WOWLAN = n
 ######### Notify SDIO Host Keep Power During Syspend ##########
 CONFIG_RTW_SDIO_PM_KEEP_POWER = y
 ###################### Platform Related #######################
-CONFIG_PLATFORM_I386_PC = n
+CONFIG_PLATFORM_I386_PC = y
 CONFIG_PLATFORM_ARM_RPI = n
 CONFIG_PLATFORM_ANDROID_X86 = n
 CONFIG_PLATFORM_ANDROID_INTEL_X86 = n
@@ -110,7 +111,6 @@ CONFIG_PLATFORM_ARM_SUN7I = n
 CONFIG_PLATFORM_ARM_SUN8I = n
 CONFIG_PLATFORM_ACTIONS_ATM702X = n
 CONFIG_PLATFORM_ACTIONS_ATV5201 = n
-CONFIG_ARCH_MESON64_ODROIDC2 = y
 CONFIG_PLATFORM_ACTIONS_ATM705X = n
 CONFIG_PLATFORM_ARM_RTD299X = n
 CONFIG_PLATFORM_ARM_SPREADTRUM_6820 = n
@@ -120,7 +120,7 @@ CONFIG_PLATFORM_TI_DM365 = n
 CONFIG_PLATFORM_MOZART = n
 CONFIG_PLATFORM_RTK119X = n
 CONFIG_PLATFORM_NOVATEK_NT72668 = n
-CONFIG_PLATFORM_AML = y
+CONFIG_ARCH_MESON64_ODROID_COMMON = y
 ########################## DEBUG ##############################
 CONFIG_DEBUG = n
 CONFIG_DEBUG_CFG80211 = n
@@ -874,7 +874,7 @@ EXTRA_CFLAGS += -DCONFIG_LITTLE_ENDIAN
 #EXTRA_CFLAGS += -DCONFIG_CONCURRENT_MODE
 EXTRA_CFLAGS += -DCONFIG_IOCTL_CFG80211 -DRTW_USE_CFG80211_STA_EVENT
 #EXTRA_CFLAGS += -DCONFIG_P2P_IPS
-SUBARCH := $(shell uname -m | sed -e s/i.86/i386/)
+SUBARCH := $(shell uname -m | sed -e s/i.86/i386/ | sed -e s/ppc64le/powerpc/)
 ARCH ?= $(SUBARCH)
 CROSS_COMPILE ?=
 ifndef KVER
@@ -1503,6 +1503,7 @@ endif
 
 endif
 
+USER_MODULE_NAME ?=
 ifeq ($(CONFIG_PLATFORM_AML), y)
 EXTRA_CFLAGS += -DCONFIG_LITTLE_ENDIAN -DCONFIG_PLATFORM_ANDROID
 EXTRA_CFLAGS += -DCONFIG_IOCTL_CFG80211 -DRTW_USE_CFG80211_STA_EVENT
@@ -1518,7 +1519,7 @@ ARCH ?= arm64
 CROSS_COMPILE ?= aarch64-linux-gnu-
 KVER := 4.9
 KSRC ?= ../../../../../common/
-CONFIG_RTL8812AU_SDK ?= m
+CONFIG_RTL8812AU ?= m
 endif
 
 ifneq ($(USER_MODULE_NAME),)
@@ -1526,6 +1527,18 @@ MODULE_NAME := $(USER_MODULE_NAME)
 endif
 
 ifneq ($(KERNELRELEASE),)
+KERNELRELEASE := $(shell uname -r)
+endif
+
+ifeq ($(CONFIG_DEBUG), y)
+EXTRA_CFLAGS += -DCONFIG_DEBUG
+endif
+ifeq ($(DCONFIG_DEBUG_CFG80211), y)
+EXTRA_CFLAGS += -DCONFIG_DEBUG_CFG80211
+endif
+ifeq ($(DCONFIG_DEBUG_RTL871X), y)
+EXTRA_CFLAGS += -DCONFIG_DEBUG_RTL871X
+endif
 
 rtk_core :=	core/rtw_cmd.o \
 		core/rtw_security.o \
@@ -1579,11 +1592,10 @@ ifeq ($(CONFIG_RTL8821A), y)
 $(MODULE_NAME)-$(CONFIG_MP_INCLUDED)+= core/rtw_bt_mp.o
 endif
 
-obj-$(CONFIG_RTL8812AU_SDK) := $(MODULE_NAME).o
-
+ifneq ($(CONFIG_RTL8812AU),)
+obj-$(CONFIG_RTL8812AU) := $(MODULE_NAME).o
 else
-
-export CONFIG_RTL8812AU_SDK = m
+obj-m := $(MODULE_NAME).o
 
 all: modules
 
