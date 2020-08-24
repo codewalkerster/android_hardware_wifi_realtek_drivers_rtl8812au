@@ -820,7 +820,7 @@ void _iqk_tx_8812a(struct dm_struct *dm, u8 chnl_idx)
 			}
 			if (tx0_average >= 2) {
 				for (i = 0; i < tx0_average; i++) {
-					for (ii = i + 1; ii < tx0_average; ii++) {
+					for (ii = i + 1; ii < tx0_average && ii < 11; ii++) {
 						dx = (TX_IQC_temp[i][0] >> 21) - (TX_IQC_temp[ii][0] >> 21);
 						if (dx < 4 && dx > -4) {
 							dy = (TX_IQC_temp[i][1] >> 21) - (TX_IQC_temp[ii][1] >> 21);
@@ -836,7 +836,7 @@ void _iqk_tx_8812a(struct dm_struct *dm, u8 chnl_idx)
 			}
 			if (tx1_average >= 2) {
 				for (i = 0; i < tx1_average; i++) {
-					for (ii = i + 1; ii < tx1_average; ii++) {
+					for (ii = i + 1; ii < tx1_average && ii < 11; ii++) {
 						dx = (TX_IQC_temp[i][2] >> 21) - (TX_IQC_temp[ii][2] >> 21);
 						if (dx < 4 && dx > -4) {
 							dy = (TX_IQC_temp[i][3] >> 21) - (TX_IQC_temp[ii][3] >> 21);
@@ -1046,7 +1046,7 @@ void _iqk_tx_8812a(struct dm_struct *dm, u8 chnl_idx)
 			       cal0_retry);
 			if (rx0_average >= 2) {
 				for (i = 0; i < rx0_average; i++) {
-					for (ii = i + 1; ii < rx0_average; ii++) {
+					for (ii = i + 1; ii < rx0_average && ii < 11; ii++) {
 						dx = (RX_IQC_temp[i][0] >> 21) - (RX_IQC_temp[ii][0] >> 21);
 						if (dx < 4 && dx > -4) {
 							dy = (RX_IQC_temp[i][1] >> 21) - (RX_IQC_temp[ii][1] >> 21);
@@ -1062,7 +1062,7 @@ void _iqk_tx_8812a(struct dm_struct *dm, u8 chnl_idx)
 			}
 			if (rx1_average >= 2) {
 				for (i = 0; i < rx1_average; i++) {
-					for (ii = i + 1; ii < rx1_average; ii++) {
+					for (ii = i + 1; ii < rx1_average && ii < 11; ii++) {
 						dx = (RX_IQC_temp[i][2] >> 21) - (RX_IQC_temp[ii][2] >> 21);
 						if (dx < 4 && dx > -4) {
 							dy = (RX_IQC_temp[i][3] >> 21) - (RX_IQC_temp[ii][3] >> 21);
