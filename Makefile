@@ -1,13 +1,14 @@
 EXTRA_CFLAGS += $(USER_EXTRA_CFLAGS) -fno-pie
 EXTRA_CFLAGS += -O3
 EXTRA_CFLAGS += -Wno-unused-variable
-#EXTRA_CFLAGS += -Wno-unused-value
+EXTRA_CFLAGS += -Wno-unused-value
 EXTRA_CFLAGS += -Wno-unused-label
 #EXTRA_CFLAGS += -Wno-unused-parameter
 EXTRA_CFLAGS += -Wno-unused-function
 EXTRA_CFLAGS += -Wno-implicit-fallthrough
 EXTRA_CFLAGS += -Wno-cast-function-type
 #EXTRA_CFLAGS += -Wno-error=cast-function-type
+#EXTRA_CFLAGS += -Wimplicit-fallthrough=0
 #EXTRA_CFLAGS += -Wno-parentheses-equality
 #EXTRA_CFLAGS += -Wno-pointer-bool-conversion
 EXTRA_CFLAGS += -Wno-unknown-pragmas
@@ -22,7 +23,7 @@ EXTRA_LDFLAGS += --strip-all -O3
 ########################## WIFI IC ############################
 CONFIG_RTL8812A = y
 CONFIG_RTL8821A = y
-CONFIG_RTL8814A = y
+CONFIG_RTL8814A = n
 ######################### Interface ###########################
 CONFIG_USB_HCI = y
 ########################### Android ###########################
@@ -93,7 +94,7 @@ CONFIG_RTW_SDIO_PM_KEEP_POWER = y
 ###################### MP HW TX MODE FOR VHT #######################
 CONFIG_MP_VHT_HW_TX_MODE = n
 ###################### Platform Related #######################
-CONFIG_PLATFORM_I386_PC = y
+CONFIG_PLATFORM_I386_PC = n
 CONFIG_PLATFORM_ANDROID_ARM64 = n
 CONFIG_PLATFORM_ARM_RPI = n
 CONFIG_PLATFORM_ARM64_RPI = n
@@ -157,7 +158,7 @@ CONFIG_PLATFORM_HISILICON_HI3798 = n
 CONFIG_PLATFORM_NV_TK1 = n
 CONFIG_PLATFORM_NV_TK1_UBUNTU = n
 CONFIG_PLATFORM_RTL8197D = n
-CONFIG_PLATFORM_AML_S905 = n
+CONFIG_PLATFORM_AML_S905 = y
 CONFIG_PLATFORM_ZTE_ZX296716 = n
 CONFIG_PLATFORM_ARM_ODROIDC2 = n
 CONFIG_PLATFORM_PPC = n
@@ -451,7 +452,8 @@ endif
 ifeq ($(CONFIG_LOAD_PHY_PARA_FROM_FILE), y)
 EXTRA_CFLAGS += -DCONFIG_LOAD_PHY_PARA_FROM_FILE
 #EXTRA_CFLAGS += -DREALTEK_CONFIG_PATH_WITH_IC_NAME_FOLDER
-EXTRA_CFLAGS += -DREALTEK_CONFIG_PATH=\"/lib/firmware/\"
+#EXTRA_CFLAGS += -DREALTEK_CONFIG_PATH=\"/lib/firmware/\"
+EXTRA_CFLAGS += -DREALTEK_CONFIG_PATH=\"\"
 endif
 
 ifeq ($(CONFIG_TXPWR_BY_RATE), n)
@@ -1571,7 +1573,7 @@ KSRC := $(DIR_LINUX)
 endif
 
 ifeq ($(CONFIG_PLATFORM_AML_S905), y)
-EXTRA_CFLAGS += -DCONFIG_PLATFORM_AML_S905
+EXTRA_CFLAGS += -DCONFIG_PLATFORM_ANDROID
 EXTRA_CFLAGS += -DCONFIG_LITTLE_ENDIAN -fno-pic
 # default setting for Android
 EXTRA_CFLAGS += -DCONFIG_CONCURRENT_MODE
