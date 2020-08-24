@@ -196,7 +196,7 @@ void odm_get_tracking_table(void *dm_void, u8 thermal_value, u8 delta)
 						(s8 **)&xtal_tab_down);
 
 	if (thermal_value > rf->eeprom_thermal) {
-		for (p = RF_PATH_A; p < c.rf_path_count; p++) {
+		for (p = RF_PATH_A; p < MAX_RF_PATH && p < c.rf_path_count; p++) {
 			/*recording power index offset*/
 			cali_info->delta_power_index_last[p] =
 					cali_info->delta_power_index[p];
@@ -275,7 +275,7 @@ void odm_get_tracking_table(void *dm_void, u8 thermal_value, u8 delta)
 				cali_info->xtal_offset_eanble = 1;
 		}
 	} else {
-		for (p = RF_PATH_A; p < c.rf_path_count; p++) {
+		for (p = RF_PATH_A; p < MAX_RF_PATH && p < c.rf_path_count; p++) {
 			/*recording power index offset*/
 			cali_info->delta_power_index_last[p] =
 						cali_info->delta_power_index[p];
