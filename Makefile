@@ -162,6 +162,7 @@ CONFIG_PLATFORM_AML_S905 = y
 CONFIG_PLATFORM_ZTE_ZX296716 = n
 CONFIG_PLATFORM_ARM_ODROIDC2 = n
 CONFIG_PLATFORM_PPC = n
+CONFIG_ARCH_MESON64_ODROID_COMMON = y
 ########### CUSTOMER ################################
 CONFIG_CUSTOMER_HUAWEI_GENERAL = n
 
@@ -720,6 +721,14 @@ KVER ?= $(shell uname -r)
 KSRC := /lib/modules/$(KVER)/build
 MODDESTDIR := /lib/modules/$(KVER)/kernel/drivers/net/wireless/
 INSTALL_PREFIX :=
+endif
+
+ifeq ($(CONFIG_ARCH_MESON64_ODROID_COMMON), y)
+ARCH ?= arm64
+CROSS_COMPILE ?= aarch64-linux-gnu-
+KVER := 4.9
+KSRC ?= ../../../../../common/
+CONFIG_RTL8812AU ?= m
 endif
 
 ifeq ($(CONFIG_PLATFORM_NV_TK1), y)
@@ -1716,11 +1725,11 @@ $(MODULE_NAME)-y += $(_PLATFORM_FILES)
 
 $(MODULE_NAME)-$(CONFIG_MP_INCLUDED) += core/rtw_mp.o
 
-obj-$(CONFIG_88XXAU) := $(MODULE_NAME).o
+obj-$(CONFIG_RTL8812AU) := $(MODULE_NAME).o
 
 else
 
-export CONFIG_88XXAU = m
+export CONFIG_RTL8812AU = m
 
 all: modules
 
