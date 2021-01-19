@@ -158,7 +158,7 @@ CONFIG_PLATFORM_NV_TK1_UBUNTU = n
 CONFIG_PLATFORM_RTL8197D = n
 CONFIG_PLATFORM_AML_S905 = y
 CONFIG_PLATFORM_ZTE_ZX296716 = n
-CONFIG_MACH_MESON8B_ODROIDC = n
+CONFIG_PLATFORM_ODROID_XU3 = y
 CONFIG_PLATFORM_PPC = n
 ########### CUSTOMER ################################
 CONFIG_CUSTOMER_HUAWEI_GENERAL = n
@@ -1188,12 +1188,12 @@ INSTALL_PREFIX :=
 STAGINGMODDIR := /lib/modules/$(KVER)/kernel/drivers/staging
 endif
 
-ifeq ($(CONFIG_MACH_MESON8B_ODROIDC), y)
+ifeq ($(CONFIG_PLATFORM_ODROID_XU3), y)
 #EXTRA_CFLAGS += -DCONFIG_LITTLE_ENDIAN
 ARCH ?= arm
-CROSS_COMPILE ?= arm-linux-gnueabihf-
+CROSS_COMPILE ?= arm-eabi-
 KVER := 3.10
-KSRC ?= ../../../../../kernel/
+KSRC ?= ../../../../../../kernel/samsung/exynos5422/
 CONFIG_RTL8812AU_SDK ?= m
 endif
 
