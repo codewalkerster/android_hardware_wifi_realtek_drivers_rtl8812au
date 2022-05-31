@@ -5,12 +5,13 @@ EXTRA_CFLAGS += -Wno-unused-value
 EXTRA_CFLAGS += -Wno-unused-label
 #EXTRA_CFLAGS += -Wno-unused-parameter
 EXTRA_CFLAGS += -Wno-unused-function
-#EXTRA_CFLAGS += -Wimplicit-fallthrough=0
+EXTRA_CFLAGS += -Wno-implicit-fallthrough
 #EXTRA_CFLAGS += -Wno-parentheses-equality
 #EXTRA_CFLAGS += -Wno-pointer-bool-conversion
 EXTRA_CFLAGS += -Wno-unknown-pragmas
 #EXTRA_CFLAGS += -Wno-unused
 EXTRA_CFLAGS += -Wno-vla -g
+EXTRA_CFLAGS += -Wno-uninitialized
 
 #GCC_VER_49 := $(shell echo `$(CC) -dumpversion | cut -f1-2 -d.` \>= 4.9 | bc )
 #ifeq ($(GCC_VER_49),1)
@@ -1120,16 +1121,6 @@ endif
 
 ifeq ($(CONFIG_MP_VHT_HW_TX_MODE), y)
 EXTRA_CFLAGS += -DCONFIG_MP_VHT_HW_TX_MODE
-ifeq ($(CONFIG_PLATFORM_I386_PC), y)
-## For I386 X86 ToolChain use Hardware FLOATING
-EXTRA_CFLAGS += -mhard-float
-EXTRA_CFLAGS += -DMARK_KERNEL_PFU
-else
-## For ARM ToolChain use Hardware FLOATING
-# Raspbian kernel is with soft-float.
-# 'softfp' allows FP instructions, but no FP on function call interfaces
-EXTRA_CFLAGS += -mfloat-abi=softfp
-endif
 endif
 
 ifeq ($(CONFIG_APPEND_VENDOR_IE_ENABLE), y)
@@ -2144,6 +2135,14 @@ endif
 
 endif
 
+ifeq ($(ARCH), i386)
+EXTRA_CFLAGS += -mhard-float
+EXTRA_CFLAGS += -DMARK_KERNEL_PFU
+else ifeq ($(ARCH), x86_64)
+EXTRA_CFLAGS += -mhard-float
+EXTRA_CFLAGS += -DMARK_KERNEL_PFU
+endif
+
 ########### CUSTOMER ################################
 ifeq ($(CONFIG_CUSTOMER_HUAWEI_GENERAL), y)
 CONFIG_CUSTOMER_HUAWEI = y
@@ -2306,6 +2305,20 @@ endif
 config_r:
 	@echo "make config"
 	/bin/bash script/Configure script/config.in
+
+DRIVER_VERSION = $(shell grep "\#define DRIVERVERSION" include/rtw_version.h | awk '{print $$3}' | tr -d v\")
+
+dkms_install:
+	@mkdir -vp /usr/src/8812au-$(DRIVER_VERSION)
+	cp -r * /usr/src/8812au-$(DRIVER_VERSION)
+	dkms add -m 8812au -v $(DRIVER_VERSION)
+	+ dkms build -m 8812au -v $(DRIVER_VERSION)
+	dkms install -m 8812au -v $(DRIVER_VERSION)
+	dkms status -m 8812au
+
+dkms_remove:
+	dkms remove 8812au/$(DRIVER_VERSION) --all
+	rm -rf /usr/src/8812au-$(DRIVER_VERSION)
 
 .PHONY: modules clean
 
