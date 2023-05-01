@@ -9216,6 +9216,8 @@ static int rtw_cfg80211_set_probe_resp_wpsp2pie(struct net_device *net, char *bu
 	RTW_INFO("%s, ielen=%d\n", __func__, len);
 #endif
 
+	if (!pmlmepriv)
+		return -EINVAL;
 	if (len > 0) {
 		wps_ie = rtw_get_wps_ie(buf, len, NULL, &wps_ielen);
 		if (wps_ie) {
